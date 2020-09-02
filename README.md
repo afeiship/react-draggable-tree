@@ -17,14 +17,14 @@ npm update @feizheng/react-draggable-tree
 ```
 
 ## properties
-| Name      | Type   | Required | Default | Description                                                                              |
-| --------- | ------ | -------- | ------- | ---------------------------------------------------------------------------------------- |
-| className | string | false    | -       | The extended className for component.                                                    |
-| value     | object | false    | -       | Default value.                                                                           |
-| items     | array  | false    | -       | The data source.                                                                         |
-| template  | func   | true     | -       | Item template.                                                                           |
-| itemsKey  | union  | false    | -       | Child item key.                                                                          |
-| options   | object | false    | -       | The core sortable component options (@sortable: https://github.com/SortableJS/Sortable). |
+| Name      | Type   | Required | Default    | Description                                                                              |
+| --------- | ------ | -------- | ---------- | ---------------------------------------------------------------------------------------- |
+| className | string | false    | -          | The extended className for component.                                                    |
+| items     | array  | false    | -          | The data source.                                                                         |
+| onChange  | func   | false    | noop       | The change handler.                                                                      |
+| template  | func   | true     | -          | Item template.                                                                           |
+| itemsKey  | union  | false    | 'children' | Child item key.                                                                          |
+| options   | object | false    | -          | The core sortable component options (@sortable: https://github.com/SortableJS/Sortable). |
 
 
 ## usage
@@ -99,7 +99,7 @@ npm update @feizheng/react-draggable-tree
         return (
           <li key={item.value} className={'is-node'}>
             <label className="is-label">{item.label}</label>
-            <ul className="is-nodes" ref={sortable}>
+            <ul className="is-nodes nested-sortable" ref={sortable}>
               {cb()}
             </ul>
           </li>
@@ -125,6 +125,9 @@ npm update @feizheng/react-draggable-tree
             template={this.template}
             items={this.state.items}
             options={{ group: 'abcd' }}
+            onChange={(e) => {
+              console.log(JSON.stringify(e.target.value, null, 2));
+            }}
           />
         </div>
       );

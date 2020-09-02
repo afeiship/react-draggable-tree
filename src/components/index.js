@@ -1,3 +1,4 @@
+import noop from '@feizheng/noop';
 import ReactTree from '@feizheng/react-tree';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -15,13 +16,17 @@ export default class ReactDraggableTree extends Component {
      */
     className: PropTypes.string,
     /**
-     * Default value.
-     */
-    value: PropTypes.object,
-    /**
      * The data source.
      */
     items: PropTypes.array,
+    /**
+     * The change handler.
+     */
+    onChange: PropTypes.func,
+    /**
+     * The uniq row key.
+     */
+    // rowKey: PropTypes.any.isRequired,
     /**
      * Item template.
      */
@@ -36,27 +41,77 @@ export default class ReactDraggableTree extends Component {
     options: PropTypes.object
   };
 
-  static defaultProps = {};
+  static defaultProps = {
+    itemsKey: 'children',
+    onChange: noop
+  };
 
   componentDidMount() {
     const dom = ReactDOM.findDOMNode(this.root);
-    this.initSortable(dom);
+    this.initSortable(dom, null);
   }
 
-  initSortable(dom) {
+  initSortable(dom, parent) {
     const { options, disabled } = this.props;
+    if (!dom) return;
     new Sortablejs(dom, {
       draggable: '.is-node',
       disabled,
+      onSort: this.handleSort.bind(null, parent),
+      onRemove: this.handleRemove.bind(null, parent),
+      onUpdate: this.handleUpdate.bind(null, parent),
       ...options
     });
   }
 
   template = ({ item, independent }, cb) => {
     const { template } = this.props;
-    const sortable = (dom) => this.initSortable(dom);
+    const sortable = (dom) => this.initSortable(dom, item);
     return template({ item, independent, sortable }, cb);
   };
+
+  getItems(inParent) {
+    const { items } = this.props;
+    return inParent ? inParent.children : items;
+  }
+
+  handleSort = (inParent, inEvent) => {
+    if (this.moved) {
+      const { newIndex } = inEvent;
+      const currentItems = this.getItems(inParent);
+      currentItems.splice(newIndex, 0, this.moved);
+      this.moved = null;
+      this.handleChange();
+    }
+  };
+
+  handleRemove = (inParent, inEvent) => {
+    const { oldIndex } = inEvent;
+    const currentItems = this.getItems(inParent);
+    this.moved = currentItems[oldIndex];
+    currentItems.splice(oldIndex, 1);
+  };
+
+  handleUpdate = (inParent, inEvent) => {
+    const { oldIndex, newIndex } = inEvent;
+    const currentItems = this.getItems(inParent);
+    const oldItem = currentItems[oldIndex];
+    //up
+    if (newIndex < oldIndex) {
+      currentItems.splice(oldIndex, 1);
+      currentItems.splice(newIndex, 0, oldItem);
+    } else {
+      //down:
+      currentItems.splice(newIndex + 1, 0, oldItem);
+      currentItems.splice(oldIndex, 1);
+    }
+    this.handleChange();
+  };
+
+  handleChange() {
+    const { items, onChange } = this.props;
+    onChange({ target: { value: items } });
+  }
 
   render() {
     const { className, options, template, disabled, ...props } = this.props;

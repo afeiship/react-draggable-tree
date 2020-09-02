@@ -60,7 +60,7 @@ class App extends React.Component {
       return (
         <li key={item.value} className={'is-node'}>
           <label className="is-label">{item.label}</label>
-          <ul className="is-nodes" ref={sortable}>
+          <ul className="is-nodes nested-sortable" ref={sortable}>
             {cb()}
           </ul>
         </li>
@@ -86,6 +86,9 @@ class App extends React.Component {
           template={this.template}
           items={this.state.items}
           options={{ group: 'abcd' }}
+          onChange={(e) => {
+            console.log(JSON.stringify(e.target.value, null, 2));
+          }}
         />
       </div>
     );
