@@ -19,12 +19,12 @@ class App extends React.Component {
               {
                 icon: 'm1-1-1-icon',
                 label: 'Menu-1-1',
-                value: 'm1-1-1'
+                value: 'm1-1-1',
               },
               {
                 icon: 'm1-1-2-icon',
                 label: 'Menu-1-2',
-                value: 'm1-1-2'
+                value: 'm1-1-2',
               }
             ]
           }
@@ -33,24 +33,28 @@ class App extends React.Component {
       {
         icon: 'm2-icon',
         label: 'Menu2',
-        value: 'm2'
+        value: 'm2',
+        children: []
       },
       {
         icon: 'mxx-icon',
         label: '-',
-        value: '-'
+        value: '-',
+        children: []
       },
       {
         disabled: false,
         icon: 'm3-icon',
         label: 'Menu3',
-        value: 'm3'
+        value: 'm3',
+        children: []
       }
     ]
   };
 
   template = ({ item, independent, sortable }, cb) => {
-    if (independent) {
+    // 这里的逻辑，直接决定了 children 下面可不可以继续加入元素。
+    if (!item.children) {
       return (
         <li key={item.value} className="is-node is-leaf">
           <label className={'is-label'}>{item.label}</label>

@@ -27,6 +27,9 @@ li {
   // common styles
   .react-tree {
     padding: 20px;
+    .is-nodes{
+      min-height: 5px;
+    }
     .is-node {
       margin-left: 20px;
       &[collapsed] {
