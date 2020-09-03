@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDraggableTree from '../src/main';
+import dataJson from './assets/index.json';
 import './assets/style.scss';
 
 class App extends React.Component {
   state = {
+    items2: dataJson.data,
     items: [
       {
         icon: 'm1-icon',
@@ -19,12 +21,12 @@ class App extends React.Component {
               {
                 icon: 'm1-1-1-icon',
                 label: 'Menu-1-1',
-                value: 'm1-1-1',
+                value: 'm1-1-1'
               },
               {
                 icon: 'm1-1-2-icon',
                 label: 'Menu-1-2',
-                value: 'm1-1-2',
+                value: 'm1-1-2'
               }
             ]
           }
@@ -72,6 +74,27 @@ class App extends React.Component {
     }
   };
 
+  template2 = ({ item, independent, sortable }, cb) => {
+    if (independent) {
+      return (
+        <li key={item.uuid} className="is-node is-leaf">
+          <span className={'is-label'}>
+            {item.name}
+          </span>
+        </li>
+      );
+    } else {
+      return (
+        <li key={item.uuid} className={'is-node'}>
+          <span className="is-label">{item.name}</span>
+          <ul className="is-nodes nested-sortable" ref={sortable}>
+            {cb()}
+          </ul>
+        </li>
+      );
+    }
+  };
+
   render() {
     return (
       <div className="app-container">
@@ -90,6 +113,23 @@ class App extends React.Component {
           template={this.template}
           items={this.state.items}
           options={{ group: 'abcd' }}
+          onChange={(e) => {
+            console.log(JSON.stringify(e.target.value, null, 2));
+          }}
+        />
+
+        <hr />
+        <h3>Sort with itemsKey children:</h3>
+        <ReactDraggableTree
+          template={this.template2}
+          items={this.state.items2}
+          itemsKey={(idx, item) => {
+            return [].concat(
+              item.nodeResponses || [],
+              item.contentResponses || []
+            );
+          }}
+          options={{ group: 'abced' }}
           onChange={(e) => {
             console.log(JSON.stringify(e.target.value, null, 2));
           }}

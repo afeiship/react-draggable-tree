@@ -7,6 +7,14 @@ import ReactDOM from 'react-dom';
 import Sortablejs from 'sortablejs';
 const CLASS_NAME = 'react-draggable-tree';
 
+const itemsGetter = (itemsKey) => {
+  return typeof itemsKey === 'function'
+    ? itemsKey
+    : function (_, item) {
+        return item[itemsKey];
+      };
+};
+
 export default class ReactDraggableTree extends Component {
   static displayName = CLASS_NAME;
   static version = '__VERSION__';
@@ -71,8 +79,9 @@ export default class ReactDraggableTree extends Component {
   };
 
   getItems(inParent) {
-    const { items } = this.props;
-    return inParent ? inParent.children : items;
+    const { items, itemsKey } = this.props;
+    const getter = itemsGetter(itemsKey);
+    return inParent ? getter(-1, inParent) : items;
   }
 
   handleSort = (inParent, inEvent) => {
