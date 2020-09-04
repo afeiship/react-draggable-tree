@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Sortablejs from 'sortablejs';
-const CLASS_NAME = 'react-draggable-tree';
 
+const CLASS_NAME = 'react-draggable-tree';
 const itemsGetter = (itemsKey) => {
   return typeof itemsKey === 'function'
     ? itemsKey
