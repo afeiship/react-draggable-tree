@@ -13,9 +13,6 @@ export default merge(baseConfig, {
     library: 'ReactDraggableTree'
   }),
   devtool: 'source-map',
-  externals: externals.base({
-    sortablejs: 'sortablejs',
-    '@feizheng/react-tree': '@feizheng/react-tree'
-  }),
+  externals: externals.node(),
   plugins: [plugins.banner(), plugins.clean(), plugins.copyStyles()]
 });

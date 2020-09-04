@@ -1,4 +1,3 @@
-import nxDeepClone from '@feizheng/next-deep-clone';
 import noop from '@feizheng/noop';
 import ReactTree from '@feizheng/react-tree';
 import classNames from 'classnames';
@@ -57,12 +56,21 @@ export default class ReactDraggableTree extends Component {
 
   constructor(inProps) {
     super(inProps);
-    this.items = nxDeepClone(inProps.items);
+    const { items } = inProps;
+    this.state = { items };
   }
 
   componentDidMount() {
     const dom = ReactDOM.findDOMNode(this.root);
     this.initSortable(dom, null);
+  }
+
+  shouldComponentUpdate(inProps) {
+    const { items } = inProps;
+    if (items !== this.state.items) {
+      return true;
+    }
+    return false;
   }
 
   initSortable(dom, parent) {
@@ -86,8 +94,9 @@ export default class ReactDraggableTree extends Component {
 
   getItems(inParent) {
     const { itemsKey } = this.props;
+    const { items } = this.state;
     const getter = itemsGetter(itemsKey);
-    return inParent ? getter(-1, inParent) : this.items;
+    return inParent ? getter(-1, inParent) : items;
   }
 
   handleSort = (inParent, inEvent) => {
@@ -105,6 +114,7 @@ export default class ReactDraggableTree extends Component {
     const currentItems = this.getItems(inParent);
     this.moved = currentItems[oldIndex];
     currentItems.splice(oldIndex, 1);
+    this.handleChange();
   };
 
   handleUpdate = (inParent, inEvent) => {
@@ -125,12 +135,15 @@ export default class ReactDraggableTree extends Component {
 
   handleChange() {
     const { onChange } = this.props;
-    this.forceUpdate();
-    onChange({ target: { value: this.items } });
+    const { items } = this.state;
+    this.setState({ items }, () => {
+      onChange({ target: { value: items } });
+    });
   }
 
   render() {
     const { className, options, template, disabled, ...props } = this.props;
+    console.log('render?');
     return (
       <ReactTree
         ref={(root) => (this.root = root)}
