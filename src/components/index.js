@@ -1,3 +1,4 @@
+import nxDeepClone from '@feizheng/next-deep-clone';
 import noop from '@feizheng/noop';
 import ReactTree from '@feizheng/react-tree';
 import classNames from 'classnames';
@@ -54,17 +55,14 @@ export default class ReactDraggableTree extends Component {
     onChange: noop
   };
 
+  constructor(inProps) {
+    super(inProps);
+    this.items = nxDeepClone(inProps.items);
+  }
+
   componentDidMount() {
     const dom = ReactDOM.findDOMNode(this.root);
     this.initSortable(dom, null);
-  }
-
-  shouldComponentUpdate(inProps) {
-    // thanks to: https://github.com/SortableJS/react-sortablejs/commit/f21ed7f272576d4c7e7b4535607f9649d7340e9b
-    // If onChange is null, it is an UnControlled component
-    // Don't let React re-render it by setting return to false
-    if (!inProps.onChange) return false;
-    return true;
   }
 
   initSortable(dom, parent) {
@@ -87,9 +85,9 @@ export default class ReactDraggableTree extends Component {
   };
 
   getItems(inParent) {
-    const { items, itemsKey } = this.props;
+    const { itemsKey } = this.props;
     const getter = itemsGetter(itemsKey);
-    return inParent ? getter(-1, inParent) : items;
+    return inParent ? getter(-1, inParent) : this.items;
   }
 
   handleSort = (inParent, inEvent) => {
@@ -126,8 +124,9 @@ export default class ReactDraggableTree extends Component {
   };
 
   handleChange() {
-    const { items, onChange } = this.props;
-    onChange({ target: { value: items } });
+    const { onChange } = this.props;
+    this.forceUpdate();
+    onChange({ target: { value: this.items } });
   }
 
   render() {
