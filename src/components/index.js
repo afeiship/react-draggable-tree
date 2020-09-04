@@ -1,3 +1,4 @@
+import nxDeepClone from '@feizheng/next-deep-clone';
 import noop from '@feizheng/noop';
 import ReactTree from '@feizheng/react-tree';
 import classNames from 'classnames';
@@ -32,10 +33,6 @@ export default class ReactDraggableTree extends Component {
      */
     onChange: PropTypes.func,
     /**
-     * The uniq row key.
-     */
-    // rowKey: PropTypes.any.isRequired,
-    /**
      * Item template.
      */
     template: PropTypes.func.isRequired,
@@ -57,7 +54,7 @@ export default class ReactDraggableTree extends Component {
   constructor(inProps) {
     super(inProps);
     const { items } = inProps;
-    this.state = { items };
+    this.state = { items: nxDeepClone(items) };
   }
 
   componentDidMount() {
@@ -65,11 +62,7 @@ export default class ReactDraggableTree extends Component {
     this.initSortable(dom, null);
   }
 
-  shouldComponentUpdate(inProps) {
-    const { items } = inProps;
-    if (items !== this.state.items) {
-      return true;
-    }
+  shouldComponentUpdate() {
     return false;
   }
 
