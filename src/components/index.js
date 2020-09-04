@@ -143,7 +143,6 @@ export default class ReactDraggableTree extends Component {
 
   render() {
     const { className, options, template, disabled, ...props } = this.props;
-    console.log('render?');
     return (
       <ReactTree
         ref={(root) => (this.root = root)}
