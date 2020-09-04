@@ -59,6 +59,14 @@ export default class ReactDraggableTree extends Component {
     this.initSortable(dom, null);
   }
 
+  shouldComponentUpdate(inProps) {
+    // thanks to: https://github.com/SortableJS/react-sortablejs/commit/f21ed7f272576d4c7e7b4535607f9649d7340e9b
+    // If onChange is null, it is an UnControlled component
+    // Don't let React re-render it by setting return to false
+    if (!inProps.onChange) return false;
+    return true;
+  }
+
   initSortable(dom, parent) {
     const { options, disabled } = this.props;
     if (!dom) return;

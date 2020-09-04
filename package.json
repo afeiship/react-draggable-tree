@@ -1,6 +1,6 @@
 {
   "name": "@feizheng/react-draggable-tree",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Draggable tree for react.",
   "main": "dist/index.js",
   "scripts": {
