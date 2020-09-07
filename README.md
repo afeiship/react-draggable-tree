@@ -119,15 +119,15 @@ npm update @feizheng/react-draggable-tree
       if (independent) {
         return (
           <li key={item.uuid} className="is-node is-leaf">
-            <span className={'is-label'}>
-              {item.name}
-            </span>
+            <span className={'is-label'}>{item.name}</span>
+            <strong className="is-handle">≡</strong>
           </li>
         );
       } else {
         return (
           <li key={item.uuid} className={'is-node'}>
             <span className="is-label">{item.name}</span>
+            <strong className="is-handle">≡</strong>
             <ul className="is-nodes nested-sortable" ref={sortable}>
               {cb()}
             </ul>
@@ -164,7 +164,7 @@ npm update @feizheng/react-draggable-tree
           <ReactDraggableTree
             template={this.template2}
             items={this.state.stdItems}
-            options={{ group: 'abced' }}
+            options={{ group: 'abced', handle:'.is-handle' }}
             onChange={(e) => {
               // console.log(JSON.stringify(e.target.value, null, 2));
             }}

@@ -27,7 +27,13 @@ li {
   // common styles
   .react-tree {
     padding: 20px;
-    .is-nodes{
+    user-select: none;
+    .is-handle {
+      padding: 5px;
+      background: #eee;
+      cursor: move;
+    }
+    .is-nodes {
       min-height: 5px;
     }
     .is-node {
