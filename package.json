@@ -1,6 +1,6 @@
 {
   "name": "@feizheng/react-draggable-tree",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Draggable tree for react.",
   "main": "dist/index.js",
   "scripts": {
@@ -76,8 +76,8 @@
     "antd": "^4.6.1"
   },
   "dependencies": {
-    "@feizheng/next-deep-clone": "^1.0.3",
     "@feizheng/next-js-core2": "^2.6.0",
+    "@feizheng/next-swap": "^1.0.1",
     "@feizheng/next-traverse": "^2.1.0",
     "@feizheng/next-tree-walk": "^1.0.7",
     "@feizheng/noop": "^1.0.0",

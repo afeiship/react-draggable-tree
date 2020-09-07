@@ -1,4 +1,4 @@
-import nxDeepClone from '@feizheng/next-deep-clone';
+import nxSwap from '@feizheng/next-swap';
 import noop from '@feizheng/noop';
 import ReactTree from '@feizheng/react-tree';
 import classNames from 'classnames';
@@ -51,12 +51,6 @@ export default class ReactDraggableTree extends Component {
     onChange: noop
   };
 
-  constructor(inProps) {
-    super(inProps);
-    const { items } = inProps;
-    this.state = { items: nxDeepClone(items) };
-  }
-
   componentDidMount() {
     const dom = ReactDOM.findDOMNode(this.root);
     this.initSortable(dom, null);
@@ -86,8 +80,7 @@ export default class ReactDraggableTree extends Component {
   };
 
   getItems(inParent) {
-    const { itemsKey } = this.props;
-    const { items } = this.state;
+    const { items, itemsKey } = this.props;
     const getter = itemsGetter(itemsKey);
     return inParent ? getter(-1, inParent) : items;
   }
@@ -113,25 +106,13 @@ export default class ReactDraggableTree extends Component {
   handleUpdate = (inParent, inEvent) => {
     const { oldIndex, newIndex } = inEvent;
     const currentItems = this.getItems(inParent);
-    const oldItem = currentItems[oldIndex];
-    //up
-    if (newIndex < oldIndex) {
-      currentItems.splice(oldIndex, 1);
-      currentItems.splice(newIndex, 0, oldItem);
-    } else {
-      //down:
-      currentItems.splice(newIndex + 1, 0, oldItem);
-      currentItems.splice(oldIndex, 1);
-    }
+    nxSwap(currentItems, oldIndex, newIndex);
     this.handleChange();
   };
 
   handleChange() {
-    const { onChange } = this.props;
-    const { items } = this.state;
-    this.setState({ items }, () => {
-      onChange({ target: { value: items } });
-    });
+    const { items, onChange } = this.props;
+    onChange({ target: { value: items } });
   }
 
   render() {
