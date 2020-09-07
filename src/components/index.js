@@ -63,6 +63,7 @@ export default class ReactDraggableTree extends Component {
       draggable: '.is-node',
       disabled,
       onSort: this.handleSort.bind(null, parent),
+      onAdd: this.handleAdd,
       onRemove: this.handleRemove.bind(null, parent),
       onUpdate: this.handleUpdate.bind(null, parent),
       ...options
@@ -80,6 +81,13 @@ export default class ReactDraggableTree extends Component {
     const getter = itemsGetter(itemsKey);
     return inParent ? getter(-1, inParent) : items;
   }
+
+  handleAdd = (inEvent) => {
+    // @fix: https://github.com/SortableJS/Sortable/issues/986
+    var itemEl = inEvent.item; // dragged HTMLElement
+    let origParent = inEvent.from;
+    origParent.appendChild(itemEl);
+  };
 
   handleSort = (inParent, inEvent) => {
     if (this.moved) {
@@ -108,6 +116,7 @@ export default class ReactDraggableTree extends Component {
 
   handleChange() {
     const { items, onChange } = this.props;
+    this.forceUpdate();
     onChange({ target: { value: items } });
   }
 
