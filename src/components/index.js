@@ -56,10 +56,6 @@ export default class ReactDraggableTree extends Component {
     this.initSortable(dom, null);
   }
 
-  shouldComponentUpdate() {
-    return false;
-  }
-
   initSortable(dom, parent) {
     const { options, disabled } = this.props;
     if (!dom) return;

@@ -127,6 +127,7 @@ class App extends React.Component {
           items={this.state.stdItems}
           options={{ group: 'abced', handle:'.is-handle' }}
           onChange={(e) => {
+            console.log(e.target.value);
             // console.log(JSON.stringify(e.target.value, null, 2));
           }}
         />
