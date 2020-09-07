@@ -79,20 +79,22 @@ class App extends React.Component {
   template2 = ({ item, independent, sortable }, cb) => {
     if (independent) {
       return (
-        <li key={item.uuid} className="is-node is-leaf">
+        <div key={item.uuid} className="is-node is-leaf">
           <span className={'is-label'}>{item.name}</span>
           <strong className="is-handle">≡</strong>
-        </li>
+        </div>
       );
     } else {
       return (
-        <li key={item.uuid} className={'is-node'}>
-          <span className="is-label">{item.name}</span>
-          <strong className="is-handle">≡</strong>
-          <ul className="is-nodes nested-sortable" ref={sortable}>
+        <details key={item.uuid} className={'is-node'} open>
+          <summary>
+            <span className="is-label">{item.name}</span>
+            <strong className="is-handle">≡</strong>
+          </summary>
+          <ul className="is-nodes" ref={sortable}>
             {cb()}
           </ul>
-        </li>
+        </details>
       );
     }
   };
@@ -125,7 +127,7 @@ class App extends React.Component {
         <ReactDraggableTree
           template={this.template2}
           items={this.state.stdItems}
-          options={{ group: 'abced', handle:'.is-handle' }}
+          options={{ group: 'abced', handle: '.is-handle' }}
           onChange={(e) => {
             console.log(e.target.value);
             // console.log(JSON.stringify(e.target.value, null, 2));

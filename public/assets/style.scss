@@ -49,4 +49,39 @@ li {
       margin-left: 0;
     }
   }
+
+  details {
+    summary {
+      outline: none;
+      &::-webkit-details-marker {
+        color: #f00;
+      }
+    }
+  }
+
+  details{
+    transition: max-height 1s ease;
+    overflow: hidden;
+    max-height: 20px;
+
+    &[open]{
+      max-height: 200px;
+    }
+  }
+
+
+  details[open] summary ~ * {
+    animation: sweep 0.5s ease-in-out;
+  }
+
+  @keyframes sweep {
+    0% {
+      opacity: 0;
+      margin-left: -10px;
+    }
+    100% {
+      opacity: 1;
+      margin-left: 0px;
+    }
+  }
 }
