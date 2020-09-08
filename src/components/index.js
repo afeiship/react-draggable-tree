@@ -1,4 +1,3 @@
-import nxSwap from '@feizheng/next-swap';
 import noop from '@feizheng/noop';
 import ReactTree from '@feizheng/react-tree';
 import classNames from 'classnames';
@@ -110,7 +109,16 @@ export default class ReactDraggableTree extends Component {
   handleUpdate = (inParent, inEvent) => {
     const { oldIndex, newIndex } = inEvent;
     const currentItems = this.getItems(inParent);
-    nxSwap(currentItems, oldIndex, newIndex);
+    const oldItem = currentItems[oldIndex];
+    //up
+    if (newIndex < oldIndex) {
+      currentItems.splice(oldIndex, 1);
+      currentItems.splice(newIndex, 0, oldItem);
+    } else {
+      //down:
+      currentItems.splice(newIndex + 1, 0, oldItem);
+      currentItems.splice(oldIndex, 1);
+    }
     this.handleChange();
   };
 
