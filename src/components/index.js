@@ -52,26 +52,27 @@ export default class ReactDraggableTree extends Component {
 
   componentDidMount() {
     const dom = ReactDOM.findDOMNode(this.root);
-    this.initSortable(dom, null);
+    this.initSortable(dom, null, null);
   }
 
-  initSortable(dom, parent) {
+  initSortable(inDom, inParent, inOptions) {
     const { options, disabled } = this.props;
-    if (!dom) return;
-    new Sortablejs(dom, {
+    if (!inDom) return;
+    new Sortablejs(inDom, {
       draggable: '.is-node',
       disabled,
-      onSort: this.handleSort.bind(null, parent),
+      onSort: this.handleSort.bind(null, inParent),
       onAdd: this.handleAdd,
-      onRemove: this.handleRemove.bind(null, parent),
-      onUpdate: this.handleUpdate.bind(null, parent),
-      ...options
+      onRemove: this.handleRemove.bind(null, inParent),
+      onUpdate: this.handleUpdate.bind(null, inParent),
+      ...options,
+      ...inOptions
     });
   }
 
   template = ({ item, independent }, cb) => {
     const { template } = this.props;
-    const sortable = (dom) => this.initSortable(dom, item);
+    const sortable = (dom, options) => this.initSortable(dom, item, options);
     return template({ item, independent, sortable }, cb);
   };
 
