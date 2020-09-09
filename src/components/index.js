@@ -124,8 +124,8 @@ export default class ReactDraggableTree extends Component {
   };
 
   handleChange() {
-    const { items, onChange } = this.props;
     this.forceUpdate();
+    const { items, onChange } = this.props;
     onChange({ target: { value: items } });
   }
 
