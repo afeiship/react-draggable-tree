@@ -182,6 +182,9 @@ class App extends React.Component {
             console.log(e.target.value);
             // console.log(JSON.stringify(e.target.value, null, 2));
           }}
+          onInit={(e) => {
+            console.log(e.target.value);
+          }}
         />
       </div>
     );

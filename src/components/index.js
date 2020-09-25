@@ -32,6 +32,10 @@ export default class ReactDraggableTree extends Component {
      */
     onChange: PropTypes.func,
     /**
+     * The handler when sortable initialize.
+     */
+    onInit: PropTypes.func,
+    /**
      * Item template.
      */
     template: PropTypes.func.isRequired,
@@ -47,27 +51,41 @@ export default class ReactDraggableTree extends Component {
 
   static defaultProps = {
     itemsKey: 'children',
-    onChange: noop
+    onChange: noop,
+    onInit: noop
   };
+
+  constructor(inProps) {
+    super(inProps);
+    this.cache = [];
+  }
 
   componentDidMount() {
     const dom = ReactDOM.findDOMNode(this.root);
+    const value = this.cache;
     this.initSortable(dom, null, null);
+    this.props.onInit({ target: { value } });
+  }
+
+  componentWillUnmount() {
+    this.cache = [];
   }
 
   initSortable(inDom, inParent, inOptions) {
     const { options, disabled } = this.props;
     if (!inDom) return;
-    new Sortablejs(inDom, {
-      draggable: '.is-node',
-      disabled,
-      onSort: this.handleSort.bind(null, inParent),
-      onAdd: this.handleAdd,
-      onRemove: this.handleRemove.bind(null, inParent),
-      onUpdate: this.handleUpdate.bind(null, inParent),
-      ...options,
-      ...inOptions
-    });
+    this.cache.push(
+      new Sortablejs(inDom, {
+        draggable: '.is-node',
+        disabled,
+        onAdd: this.handleAdd,
+        onSort: this.handleSort.bind(null, inParent),
+        onRemove: this.handleRemove.bind(null, inParent),
+        onUpdate: this.handleUpdate.bind(null, inParent),
+        ...options,
+        ...inOptions
+      })
+    );
   }
 
   template = ({ item, independent }, cb) => {
@@ -130,7 +148,15 @@ export default class ReactDraggableTree extends Component {
   }
 
   render() {
-    const { className, options, template, disabled, ...props } = this.props;
+    const {
+      className,
+      options,
+      template,
+      disabled,
+      onInit,
+      onChange,
+      ...props
+    } = this.props;
     return (
       <ReactTree
         ref={(root) => (this.root = root)}

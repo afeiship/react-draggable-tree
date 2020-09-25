@@ -22,6 +22,7 @@ npm update @feizheng/react-draggable-tree
 | className | string | false    | -          | The extended className for component.                                                    |
 | items     | array  | false    | -          | The data source.                                                                         |
 | onChange  | func   | false    | noop       | The change handler.                                                                      |
+| onInit    | func   | false    | noop       | The handler when sortable initialize.                                                    |
 | template  | func   | true     | -          | Item template.                                                                           |
 | itemsKey  | union  | false    | 'children' | Child item key.                                                                          |
 | options   | object | false    | -          | The core sortable component options (@sortable: https://github.com/SortableJS/Sortable). |
@@ -220,6 +221,9 @@ npm update @feizheng/react-draggable-tree
             onChange={(e) => {
               console.log(e.target.value);
               // console.log(JSON.stringify(e.target.value, null, 2));
+            }}
+            onInit={(e) => {
+              console.log(e.target.value);
             }}
           />
         </div>
