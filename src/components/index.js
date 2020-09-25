@@ -1,3 +1,4 @@
+import nxValues from '@feizheng/next-values';
 import noop from '@feizheng/noop';
 import ReactTree from '@feizheng/react-tree';
 import classNames from 'classnames';
@@ -28,6 +29,10 @@ export default class ReactDraggableTree extends Component {
      */
     items: PropTypes.array,
     /**
+     * The item unique key.
+     */
+    rowKey: PropTypes.string,
+    /**
      * The change handler.
      */
     onChange: PropTypes.func,
@@ -57,35 +62,48 @@ export default class ReactDraggableTree extends Component {
 
   constructor(inProps) {
     super(inProps);
-    this.cache = [];
+    this.cache = {};
   }
 
   componentDidMount() {
     const dom = ReactDOM.findDOMNode(this.root);
-    const value = this.cache;
     this.initSortable(dom, null, null);
-    this.props.onInit({ target: { value } });
+    this.handleInitSortable();
   }
 
   componentWillUnmount() {
-    this.cache = [];
+    this.cache = {};
+  }
+
+  shouldComponentUpdate(inProps) {
+    const { items } = inProps;
+    if (items !== this.props.items) {
+      this.handleInitSortable();
+    }
+    return true;
+  }
+
+  handleInitSortable() {
+    setTimeout(() => {
+      const value = nxValues(this.cache);
+      this.props.onInit({ target: { value } });
+    }, 0);
   }
 
   initSortable(inDom, inParent, inOptions) {
-    const { options, disabled } = this.props;
+    const { options, disabled, rowKey } = this.props;
     if (!inDom) return;
-    this.cache.push(
-      new Sortablejs(inDom, {
-        draggable: '.is-node',
-        disabled,
-        onAdd: this.handleAdd,
-        onSort: this.handleSort.bind(null, inParent),
-        onRemove: this.handleRemove.bind(null, inParent),
-        onUpdate: this.handleUpdate.bind(null, inParent),
-        ...options,
-        ...inOptions
-      })
-    );
+    const id = inParent ? inParent[rowKey] : null;
+    this.cache[id] = new Sortablejs(inDom, {
+      draggable: '.is-node',
+      disabled,
+      onAdd: this.handleAdd,
+      onSort: this.handleSort.bind(null, inParent),
+      onRemove: this.handleRemove.bind(null, inParent),
+      onUpdate: this.handleUpdate.bind(null, inParent),
+      ...options,
+      ...inOptions
+    });
   }
 
   template = ({ item, independent }, cb) => {
@@ -151,12 +169,14 @@ export default class ReactDraggableTree extends Component {
     const {
       className,
       options,
+      rowKey,
       template,
       disabled,
       onInit,
       onChange,
       ...props
     } = this.props;
+
     return (
       <ReactTree
         ref={(root) => (this.root = root)}
