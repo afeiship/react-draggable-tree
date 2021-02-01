@@ -1,5 +1,5 @@
-import nxValues from '@feizheng/next-values';
-import noop from '@feizheng/noop';
+import nxValues from '@jswork/next-values';
+import noop from '@jswork/noop';
 import ReactTree from '@feizheng/react-tree';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
