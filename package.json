@@ -1,6 +1,6 @@
 {
   "name": "@feizheng/react-draggable-tree",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Draggable tree for react.",
   "main": "dist/index.js",
   "scripts": {
@@ -19,7 +19,9 @@
   },
   "keywords": [
     "react",
-    "component"
+    "draggable",
+    "tree",
+    "sortablejs"
   ],
   "author": "afei",
   "license": "MIT",
