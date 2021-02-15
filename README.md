@@ -8,225 +8,45 @@
 
 ## installation
 ```shell
-npm install -S @feizheng/react-draggable-tree
-```
-
-## update
-```shell
-npm update @feizheng/react-draggable-tree
+npm install -S @jswork/react-draggable-tree
 ```
 
 ## properties
-| Name      | Type   | Required | Default    | Description                                                                              |
-| --------- | ------ | -------- | ---------- | ---------------------------------------------------------------------------------------- |
-| className | string | false    | -          | The extended className for component.                                                    |
-| items     | array  | false    | -          | The data source.                                                                         |
-| onChange  | func   | false    | noop       | The change handler.                                                                      |
-| onInit    | func   | false    | noop       | The handler when sortable initialize.                                                    |
-| template  | func   | true     | -          | Item template.                                                                           |
-| itemsKey  | union  | false    | 'children' | Child item key.                                                                          |
-| options   | object | false    | -          | The core sortable component options (@sortable: https://github.com/SortableJS/Sortable). |
+| Name      | Type   | Required | Default | Description                           |
+| --------- | ------ | -------- | ------- | ------------------------------------- |
+| className | string | false    | -       | The extended className for component. |
+| value     | object | false    | null    | The changed value.                    |
+| onChange  | func   | false    | noop    | The change handler.                   |
 
 
 ## usage
 1. import css
   ```scss
-  @import "~@feizheng/react-draggable-tree/dist/style.scss";
+  @import "~@jswork/react-draggable-tree/dist/style.css";
+
+  // or use sass
+  @import "~@jswork/react-draggable-tree/dist/style.scss";
 
   // customize your styles:
   $react-draggable-tree-options: ()
   ```
 2. import js
   ```js
+  import ReactDemokit from '@jswork/react-demokit';
   import React from 'react';
   import ReactDOM from 'react-dom';
-  import ReactDraggableTree from '@feizheng/react-draggable-tree';
-  import dataJson from './assets/index.json';
-  import leveledJson from './assets/level-grouped.json';
-  import stdJson from './assets/std.json';
+  import ReactDraggableTree from '@jswork/react-draggable-tree';
   import './assets/style.scss';
-  import Helper from './helper';
 
   class App extends React.Component {
-    state = {
-      items2: dataJson.data,
-      stdItems: stdJson.data,
-      leveledItems: leveledJson.data,
-      items: [
-        {
-          icon: 'm1-icon',
-          label: 'Menu1',
-          value: 'm1',
-          children: [
-            {
-              icon: 'm1-1-icon',
-              label: 'Menu1-1',
-              value: 'm1-1',
-              children: [
-                {
-                  icon: 'm1-1-1-icon',
-                  label: 'Menu-1-1',
-                  value: 'm1-1-1'
-                },
-                {
-                  icon: 'm1-1-2-icon',
-                  label: 'Menu-1-2',
-                  value: 'm1-1-2'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          icon: 'm2-icon',
-          label: 'Menu2',
-          value: 'm2',
-          children: []
-        },
-        {
-          icon: 'mxx-icon',
-          label: '-',
-          value: '-',
-          children: []
-        },
-        {
-          disabled: false,
-          icon: 'm3-icon',
-          label: 'Menu3',
-          value: 'm3',
-          children: []
-        }
-      ]
-    };
-
-    template = ({ item, independent, sortable }, cb) => {
-      // 这里的逻辑，直接决定了 children 下面可不可以继续加入元素。
-      if (!item.children) {
-        return (
-          <li key={item.value} className="is-node is-leaf">
-            <label className={'is-label'}>{item.label}</label>
-          </li>
-        );
-      } else {
-        return (
-          <li key={item.value} className={'is-node'}>
-            <label className="is-label">{item.label}</label>
-            <ul className="is-nodes nested-sortable" ref={sortable}>
-              {cb()}
-            </ul>
-          </li>
-        );
-      }
-    };
-
-    template2 = ({ item, independent, sortable }, cb) => {
-      if (independent) {
-        return (
-          <div key={item.uuid} className="is-node is-leaf">
-            <span className={'is-label'}>{item.name}</span>
-            <strong className="is-handle">≡</strong>
-          </div>
-        );
-      } else {
-        return (
-          <details key={item.uuid} className={'is-node'} open>
-            <summary>
-              <span className="is-label">{item.name}</span>
-              <strong className="is-handle">≡</strong>
-            </summary>
-            <ul className="is-nodes" ref={sortable}>
-              {cb()}
-            </ul>
-          </details>
-        );
-      }
-    };
-
-    template3 = ({ item, independent, sortable }, cb) => {
-      if (independent) {
-        return (
-          <div key={item.uuid} className="is-node is-leaf">
-            <span className={'is-label'}>
-              {item.name}-level: {item.level}
-            </span>
-            <strong className="is-handle">≡</strong>
-          </div>
-        );
-      } else {
-        return (
-          <details key={item.uuid} className={'is-node'} open>
-            <summary>
-              <span className="is-label">{item.name}</span>
-              <strong className="is-handle">≡</strong>
-            </summary>
-            <ul
-              className="is-nodes"
-              ref={(dom) => {
-                return sortable(dom, { group: item.level });
-              }}>
-              {cb()}
-            </ul>
-          </details>
-        );
-      }
-    };
-
     render() {
-      const leveledItems = Helper.to(this.state.leveledItems);
       return (
-        <div className="app-container">
-          <h3>Sort only children:</h3>
-          <ReactDraggableTree
-            template={this.template}
-            items={this.state.items}
-            onChange={(e) => {
-              console.log(e.target.value);
-            }}
-          />
-          <h3>Sort only children - disabled:</h3>
-          <ReactDraggableTree
-            template={this.template}
-            items={this.state.items}
-            disabled
-          />
-
-          <hr />
-          <h3>Sort with grouped:</h3>
-          <ReactDraggableTree
-            template={this.template}
-            items={this.state.items}
-            options={{ group: 'abcd' }}
-            onChange={(e) => {
-              // console.log(JSON.stringify(e.target.value, null, 2));
-            }}
-          />
-
-          <hr />
-          <h3>Sort with itemsKey children:</h3>
-          <ReactDraggableTree
-            template={this.template2}
-            items={this.state.stdItems}
-            options={{ group: 'abced', handle: '.is-handle' }}
-            onChange={(e) => {
-              console.log(e.target.value);
-              // console.log(JSON.stringify(e.target.value, null, 2));
-            }}
-          />
-          <hr />
-          <h3>Sort with external options:</h3>
-          <ReactDraggableTree
-            template={this.template3}
-            items={leveledItems}
-            options={{ group: 'abcedfg', handle: '.is-handle' }}
-            onChange={(e) => {
-              console.log(e.target.value);
-              // console.log(JSON.stringify(e.target.value, null, 2));
-            }}
-            onInit={(e) => {
-              console.log(e.target.value);
-            }}
-          />
-        </div>
+        <ReactDemokit
+          className="p-3 app-container"
+          url="https://github.com/afeiship/react-draggable-tree">
+          <ReactDraggableTree className="mb-5 has-text-white" />
+          <button className="button is-primary is-fullwidth">Start~</button>
+        </ReactDemokit>
       );
     }
   }
@@ -242,14 +62,14 @@ npm update @feizheng/react-draggable-tree
 ## license
 Code released under [the MIT license](https://github.com/afeiship/react-draggable-tree/blob/master/LICENSE.txt).
 
-[version-image]: https://img.shields.io/npm/v/@feizheng/react-draggable-tree
-[version-url]: https://npmjs.org/package/@feizheng/react-draggable-tree
+[version-image]: https://img.shields.io/npm/v/@jswork/react-draggable-tree
+[version-url]: https://npmjs.org/package/@jswork/react-draggable-tree
 
-[license-image]: https://img.shields.io/npm/l/@feizheng/react-draggable-tree
+[license-image]: https://img.shields.io/npm/l/@jswork/react-draggable-tree
 [license-url]: https://github.com/afeiship/react-draggable-tree/blob/master/LICENSE.txt
 
-[size-image]: https://img.shields.io/bundlephobia/minzip/@feizheng/react-draggable-tree
+[size-image]: https://img.shields.io/bundlephobia/minzip/@jswork/react-draggable-tree
 [size-url]: https://github.com/afeiship/react-draggable-tree/blob/master/dist/react-draggable-tree.min.js
 
-[download-image]: https://img.shields.io/npm/dm/@feizheng/react-draggable-tree
-[download-url]: https://www.npmjs.com/package/@feizheng/react-draggable-tree
+[download-image]: https://img.shields.io/npm/dm/@jswork/react-draggable-tree
+[download-url]: https://www.npmjs.com/package/@jswork/react-draggable-tree

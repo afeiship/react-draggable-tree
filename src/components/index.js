@@ -1,6 +1,6 @@
 import nxValues from '@jswork/next-values';
 import noop from '@jswork/noop';
-import ReactTree from '@feizheng/react-tree';
+import ReactTree from '@jswork/react-tree';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -189,3 +189,4 @@ export default class ReactDraggableTree extends Component {
     );
   }
 }
+

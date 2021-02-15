@@ -1,4 +1,4 @@
-import '@feizheng/next-traverse';
+import '@jswork/next-traverse';
 import { cloneDeep } from 'lodash';
 
 const toChildren = (v, type) => {

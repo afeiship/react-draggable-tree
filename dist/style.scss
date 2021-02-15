@@ -2,9 +2,9 @@ $react-draggable-tree-options: () !default;
 
 .react-draggable-tree {
   // your styles
-  &[disabled] {
-    opacity: 0.6;
-    pointer-events: none;
-    user-select: none;
+  color: red;
+  font-size: 12px;
+  &:active {
+    color: black;
   }
 }

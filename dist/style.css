@@ -1,0 +1,5 @@
+.react-draggable-tree {
+  color: red;
+  font-size: 12px; }
+  .react-draggable-tree:active {
+    color: black; }

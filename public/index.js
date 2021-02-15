@@ -1,10 +1,12 @@
+import ReactDemokit from '@jswork/react-demokit';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDraggableTree from '../src/main';
+import './assets/style.scss';
+
 import dataJson from './assets/index.json';
 import leveledJson from './assets/level-grouped.json';
 import stdJson from './assets/std.json';
-import './assets/style.scss';
 import Helper from './helper';
 
 class App extends React.Component {
@@ -134,7 +136,9 @@ class App extends React.Component {
   render() {
     const leveledItems = Helper.to(this.state.leveledItems);
     return (
-      <div className="app-container">
+      <ReactDemokit
+        className="p-3 app-container"
+        url="https://github.com/afeiship/react-draggable-tree">
         <h3>Sort only children:</h3>
         <ReactDraggableTree
           template={this.template}
@@ -186,7 +190,7 @@ class App extends React.Component {
             console.log(e.target.value);
           }}
         />
-      </div>
+      </ReactDemokit>
     );
   }
 }
