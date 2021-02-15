@@ -1,5 +1,4 @@
-.react-draggable-tree {
-  color: red;
-  font-size: 12px; }
-  .react-draggable-tree:active {
-    color: black; }
+.react-draggable-tree[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+  user-select: none; }
