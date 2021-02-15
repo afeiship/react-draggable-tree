@@ -20,17 +20,10 @@
     "url": "git+https://github.com/afeiship/react-draggable-tree.git"
   },
   "keywords": [
-    "boilerplate",
     "react",
-    "component",
-    "cra",
-    "template",
-    "webpack",
-    "sass",
-    "scss",
-    "docs",
-    "service-worker",
-    "sw"
+    "draggable",
+    "tree",
+    "sortablejs"
   ],
   "author": "afei",
   "license": "MIT",
