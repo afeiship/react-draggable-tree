@@ -1,10 +1,15 @@
 $react-draggable-tree-options: () !default;
 
+@import "dragula/dist/dragula.css";
+
 .react-draggable-tree {
   // your styles
-  &[disabled] {
-    opacity: 0.6;
-    pointer-events: none;
-    user-select: none;
+  .is-label {
+    cursor: move;
+  }
+
+  .is-nodes {
+    padding: 5px;
+    border: 1px dotted #ccc;
   }
 }

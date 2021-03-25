@@ -4,62 +4,14 @@
 @import "~@jswork/react-demokit/dist/style.scss";
 
 .app-container {
-  .is-body{
-    background: #fff;
-    padding: 40px;
-  }
-  .react-tree {
-    border: 3px dashed gray;
-    margin-bottom: 20px;
-  }
-
-  // common styles
-  .react-tree {
+  .is-body {
     padding: 20px;
-    user-select: none;
-    .is-handle {
-      padding: 5px;
-      background: #eee;
-      cursor: move;
-    }
-    .is-nodes {
-      min-height: 5px;
-    }
-    .is-node {
+    background: #fff;
+    width: 50%;
+    min-width: 320px;
+    margin: 0 auto;
+    .is-nodes{
       margin-left: 20px;
-      &[collapsed] {
-        .is-branch {
-          display: none;
-        }
-      }
-    }
-
-    > .is-node {
-      margin-left: 0;
-    }
-  }
-
-  details {
-    summary {
-      outline: none;
-      &::-webkit-details-marker {
-        color: #f00;
-      }
-    }
-  }
-
-  details[open] summary ~ * {
-    animation: sweep 0.5s ease-in-out;
-  }
-
-  @keyframes sweep {
-    0% {
-      opacity: 0;
-      margin-left: -10px;
-    }
-    100% {
-      opacity: 1;
-      margin-left: 0px;
     }
   }
 }

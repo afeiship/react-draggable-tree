@@ -1,6 +1,6 @@
 {
   "name": "@jswork/react-draggable-tree",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Draggable tree for react.",
   "main": "dist/index.js",
   "scripts": {
@@ -20,10 +20,17 @@
     "url": "git+https://github.com/afeiship/react-draggable-tree.git"
   },
   "keywords": [
+    "boilerplate",
     "react",
-    "draggable",
-    "tree",
-    "sortablejs"
+    "component",
+    "cra",
+    "template",
+    "webpack",
+    "sass",
+    "scss",
+    "docs",
+    "service-worker",
+    "sw"
   ],
   "author": "afei",
   "license": "MIT",
@@ -53,7 +60,6 @@
     "@babel/preset-react": "^7.10.4",
     "@babel/register": "^7.11.5",
     "@jswork/next-replace-in-file": "^1.0.0",
-    "@jswork/next-traverse": "^1.0.1",
     "@jswork/react-demokit": "^1.0.2",
     "@jswork/react-markdown-props": "^1.0.1",
     "@jswork/webpack-lib-kits": "^1.0.2",
@@ -66,7 +72,6 @@
     "express": "^4.17.1",
     "indent-string": "^4.0.0",
     "jest": "^26.4.2",
-    "lodash": "^4.17.20",
     "node-sass": "^4.14.1",
     "offline-plugin": "^5.0.7",
     "prettier": "^2.1.2",
@@ -83,11 +88,10 @@
     "prop-types": "^15.7.2"
   },
   "dependencies": {
-    "@jswork/next-values": "^1.0.0",
     "@jswork/noop": "^1.0.0",
     "@jswork/react-tree": "^1.0.0",
     "classnames": "^2.2.6",
-    "sortablejs": "^1.13.0"
+    "dragula": "^3.7.3"
   },
   "publishConfig": {
     "access": "public",

@@ -1,19 +1,18 @@
-import nxValues from '@jswork/next-values';
 import noop from '@jswork/noop';
-import ReactTree from '@jswork/react-tree';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import Sortablejs from 'sortablejs';
+import ReactTree from '@jswork/react-tree';
+import dragula from 'dragula';
 
 const CLASS_NAME = 'react-draggable-tree';
-const itemsGetter = (itemsKey) => {
-  return typeof itemsKey === 'function'
-    ? itemsKey
-    : function (_, item) {
-        return item[itemsKey];
-      };
+const DEFAULT_TEMPLATE = ({ item }, cb) => {
+  return (
+    <div key={item.value} data-value={item.value} className={'is-node'}>
+      <label className="is-label">{item.label}</label>
+      <div className="is-nodes">{cb()}</div>
+    </div>
+  );
 };
 
 export default class ReactDraggableTree extends Component {
@@ -29,164 +28,48 @@ export default class ReactDraggableTree extends Component {
      */
     items: PropTypes.array,
     /**
-     * The item unique key.
-     */
-    rowKey: PropTypes.string,
-    /**
-     * The change handler.
-     */
-    onChange: PropTypes.func,
-    /**
-     * The handler when sortable initialize.
-     */
-    onInit: PropTypes.func,
-    /**
      * Item template.
      */
-    template: PropTypes.func.isRequired,
+    template: PropTypes.func,
     /**
      * Child item key.
      */
-    itemsKey: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-    /**
-     * The core sortable component options (@sortable: https://github.com/SortableJS/Sortable).
-     */
-    options: PropTypes.object
+    itemsKey: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
   };
 
   static defaultProps = {
-    itemsKey: 'children',
-    onChange: noop,
-    onInit: noop
+    template: DEFAULT_TEMPLATE,
+    itemsKey: 'children'
   };
 
-  constructor(inProps) {
-    super(inProps);
-    this.cache = {};
-  }
-
   componentDidMount() {
-    const dom = ReactDOM.findDOMNode(this.root);
-    this.initSortable(dom, null, null);
-    this.handleInitSortable();
-  }
+    const nodes = nx
+      .slice(this.root.querySelectorAll('.is-nodes'))
+      .concat(this.root.querySelector('.react-tree'));
 
-  componentWillUnmount() {
-    this.cache = {};
-  }
+    this.drake = dragula(nodes, {
+      accepts: (el, target) => {
+        return !el.contains(target);
+      }
+    });
 
-  shouldComponentUpdate(inProps) {
-    const { items } = inProps;
-    if (items !== this.props.items) {
-      this.handleInitSortable();
-    }
-    return true;
-  }
-
-  handleInitSortable() {
-    setTimeout(() => {
-      const value = nxValues(this.cache);
-      this.props.onInit({ target: { value } });
-    }, 0);
-  }
-
-  initSortable(inDom, inParent, inOptions) {
-    const { options, disabled, rowKey } = this.props;
-    if (!inDom) return;
-    const id = inParent ? inParent[rowKey] : null;
-    this.cache[id] = new Sortablejs(inDom, {
-      draggable: '.is-node',
-      disabled,
-      onAdd: this.handleAdd,
-      onSort: this.handleSort.bind(null, inParent),
-      onRemove: this.handleRemove.bind(null, inParent),
-      onUpdate: this.handleUpdate.bind(null, inParent),
-      ...options,
-      ...inOptions
+    this.drake.on('drop', (el, target, source, sibling) => {
+      const src = nx.get(el, 'dataset.value');
+      const dst = nx.get(sibling, 'dataset.value');
+      console.log(src, dst);
+      console.log('el, target, source, sibling:', el, target, source, sibling);
     });
   }
 
-  template = ({ item, independent }, cb) => {
-    const { template } = this.props;
-    const sortable = (dom, options) => this.initSortable(dom, item, options);
-    return template({ item, independent, sortable }, cb);
-  };
-
-  getItems(inParent) {
-    const { items, itemsKey } = this.props;
-    const getter = itemsGetter(itemsKey);
-    return inParent ? getter(-1, inParent) : items;
-  }
-
-  handleAdd = (inEvent) => {
-    // @fix: https://github.com/SortableJS/Sortable/issues/986
-    var itemEl = inEvent.item; // dragged HTMLElement
-    let origParent = inEvent.from;
-    origParent.appendChild(itemEl);
-  };
-
-  handleSort = (inParent, inEvent) => {
-    if (this.moved) {
-      const { newIndex } = inEvent;
-      const currentItems = this.getItems(inParent);
-      currentItems.splice(newIndex, 0, this.moved);
-      this.moved = null;
-      this.handleChange();
-    }
-  };
-
-  handleRemove = (inParent, inEvent) => {
-    const { oldIndex } = inEvent;
-    const currentItems = this.getItems(inParent);
-    this.moved = currentItems[oldIndex];
-    currentItems.splice(oldIndex, 1);
-    this.handleChange();
-  };
-
-  handleUpdate = (inParent, inEvent) => {
-    const { oldIndex, newIndex } = inEvent;
-    const currentItems = this.getItems(inParent);
-    const oldItem = currentItems[oldIndex];
-    //up
-    if (newIndex < oldIndex) {
-      currentItems.splice(oldIndex, 1);
-      currentItems.splice(newIndex, 0, oldItem);
-    } else {
-      //down:
-      currentItems.splice(newIndex + 1, 0, oldItem);
-      currentItems.splice(oldIndex, 1);
-    }
-    this.handleChange();
-  };
-
-  handleChange() {
-    this.forceUpdate();
-    const { items, onChange } = this.props;
-    onChange({ target: { value: items } });
-  }
-
   render() {
-    const {
-      className,
-      options,
-      rowKey,
-      template,
-      disabled,
-      onInit,
-      onChange,
-      ...props
-    } = this.props;
-
+    const { className, ...props } = this.props;
     return (
-      <ReactTree
+      <div
         ref={(root) => (this.root = root)}
         data-component={CLASS_NAME}
-        disabled={disabled}
-        className={classNames(CLASS_NAME, className)}
-        template={this.template}
-        {...props}
-      />
+        className={classNames(CLASS_NAME, className)}>
+        <ReactTree {...props} />
+      </div>
     );
   }
 }
-
